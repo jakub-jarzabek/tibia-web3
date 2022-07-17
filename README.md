@@ -4,7 +4,7 @@
 - [Conversion rates](#conversion-rates)
 - [Caviats](#caviats)
 
-This project is a simple solution for payment in ETH tokens for premium poiints in any Tibia Private server. As most Tibia servers and their corresponding websites for buying premium points and managing user account and premium point balance are common templates, or even already prebuild sites, the goal here was to make ETH payment as simple as possible without using custom written smart contracts. (For more secure version with custom smart contaract for validation and payment navigate here :[WIP](#))
+This project is a simple solution for payment in ETH tokens for premium points in any Tibia Private server. As most Tibia servers and their corresponding websites for buying premium points and managing user account and premium point balance are common templates, or even already prebuild sites, the goal here was to make ETH payment as simple as possible without using custom written smart contracts. (For more secure version with custom smart contaract for validation and payment navigate here :[WIP](#))
 
 # Important security notes
 

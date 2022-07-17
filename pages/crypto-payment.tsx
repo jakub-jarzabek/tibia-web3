@@ -33,7 +33,7 @@ interface IQuery {
 
 const CryptoPayment = () => {
   const scanServiceCoreUrl =
-    process.env.NETWORK === 'eth'
+    process.env.NEXT_PUBLIC_NETWORK === 'eth'
       ? 'https://etherscan.io/address/'
       : `https://${process.env.NEXT_PUBLIC_NETWORK}.etherscan.io/address/`
   const r: any = useRouter()

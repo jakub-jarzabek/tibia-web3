@@ -11,11 +11,11 @@ export default function PostCrypto(req: PostCryptoDTO, res: NextApiResponse) {
   const awaitConfirmation = async () => {
     Moralis.start({
       serverUrl: process.env.NEXT_PUBLIC_SERVER_URL,
-      appId: process.env.NEXT_PUBLIC_SERVER_URL,
+      appId: process.env.NEXT_PUBLIC_APP_ID,
     })
     const checkStatusInterval = setInterval(async () => {
       const transaction = await Moralis.Web3API.native.getTransaction({
-        chain: process.env.NETWORK,
+        chain: process.env.NEXT_PUBLIC_NETWORK,
         transaction_hash: hash,
       })
 
@@ -27,6 +27,9 @@ export default function PostCrypto(req: PostCryptoDTO, res: NextApiResponse) {
             donationData: donationInfo,
             paymentSuccessful: true,
           })
+          await axios.post(
+            `${process.env.PAYMENT_CONFIRMED_ENDPOINT}?userMail=${donationInfo.mail}&points=${donationInfo.points}`
+          )
         } catch (error) {
           console.error(error)
         }

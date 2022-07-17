@@ -1,34 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+- [Important security notes](#important-security-notes)
+- [Getting Started](#getting-started)
+- [Environment Variables Configuration](#environment-variables-configuration)
+- [Conversion rates](#conversion-rates)
+- [Caviats](#caviats)
 
-## Getting Started
+This project is a simple solution for payment in ETH tokens for premium poiints in any Tibia Private server. As most Tibia servers and their corresponding websites for buying premium points and managing user account and premium point balance are common templates, or even already prebuild sites, the goal here was to make ETH payment as simple as possible without using custom written smart contracts. (For more secure version with custom smart contaract for validation and payment navigate here :[WIP](#))
 
-First, run the development server:
+# Important security notes
+
+This project doest not include Premium Points / EUR conversion rate validation and as most Tibia website templates use url query for passing data end user can manually interfare with value they should pay for specific number of premium points. Version with custom smart contract resolve this issue, but it require more in depth blockchain knowlendge (more on that here [WIP(#)]). For implementing conversion rates validation in this project navigate here: [Convertion Rates](#conversion-rates)
+
+# Getting Started
+
+1. Clone Project:
 
 ```bash
-npm run dev
-# or
-yarn dev
+git clone https://github.com/jakub-jarzabek/tibia-web3
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Enter project directory and run pnp install
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+cd tibia-web3 && pnp install
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+3. Run project
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+pnp dev
+```
 
-## Learn More
+# Environment Variables Configuration
 
-To learn more about Next.js, take a look at the following resources:
+Project needs to have some specific env configuration both for frontend and backend part:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| ENV                         | DESCRIPTION                                                               | USED IN          |
+| --------------------------- | ------------------------------------------------------------------------- | ---------------- |
+| NEXT_PUBLIC_NETWORK         | Chain id for moralis (e.g. 'eth' for ehtereum mainnet)                    | Frontent/Backend |
+| NEXT_PUBLIC_SERVER_URL      | Moralis server url                                                        | Frontend/Backend |
+| NEXT_PUBLIC_APP_ID          | Moralis application id                                                    | Frontend/Backend |
+| PAYMENT_CONFIRMEND_ENDPOINT | Main Website Endpoint where payment confiramation data should be returned | Backend          |
+| URL                         | Server core URL                                                           | Backend          |
+| MAIL_USER                   | Username for gmail smtp for mailing after transaction                     | Backend          |
+| MAIL_PASSWORD               | Password for gmail smtp for mailing after transaction                     | Backend          |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# Conversion rates
 
-## Deploy on Vercel
+For Conversion rates validation you have three options, which none if perfect without using custom smart contract.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Implementing validation on frontend just before sending transaction (Can be tempered with)
+2. Implementing validation on `/crypto-payment` endoint. (Cannot be tempered with, but in oreder to return already transfered tokens, additional transfer is required, that use additional gas as we cant use revert method outside of smartcontract)
+3. Implementing validation on final main website endpoint (for which one path is stored in `PAYMENT_CONFIRMED_ENDPOINT` env). As above in order to return already transfered tokens new transaction must be created.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# Caviats
+
+- Due to frontend getting information about transaction confirmation, only when backend intervals succesfully gets transaction receipt from initiated transaction, this request can time out even if tranasaction passes, when getting receipt is taking longer that usual. In that case frontend can display false information about transaction failure even if transaction passed and user gets both email with information about successful transaction and Premoum Points on his account.

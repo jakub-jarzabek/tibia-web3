@@ -21,7 +21,7 @@ git clone https://github.com/jakub-jarzabek/tibia-web3
 2. Enter project directory and run pnp install
 
 ```bash
-cd tibia-web3 && pnp install
+cd tibia-web3 && pnpm install
 ```
 
 3. Run project
